@@ -15,8 +15,10 @@ Must define:
             getattr(self, funcname)(*args, **kwargs)
     def _wrapped_call(self, attr, args):
         ret = getattr(self.wrapped, attr)(*args)
+        ret = self.__get_call('_adj_return_%s' % attr, ret)
         data = return2data(ret)
         self.sock.send(data)
+        self.__get_call('_post_call_%s' % attr)
         return ret
     def _message(self, name, args=(), kwargs={}):
         if name in attrs:
