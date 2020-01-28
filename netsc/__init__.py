@@ -3,5 +3,5 @@ from .server import Server
 from .client import Client
 
 __all__ = ['objects2data', 'return2data', 'data2objects', 'Server', 'Client']
-__version__ = '1.0.1'
+__version__ = '1.0.2'
 __author__ = 'Gaming32'

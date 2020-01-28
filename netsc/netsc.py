@@ -18,8 +18,15 @@ Must define:
         if ret is None:
             ret = preret
         return ret
+    def _deadj_args(self, name, args):
+        ret = self.__get_call('deadj_args_%s' % name, args)
+        if ret is None:
+            ret = (args, {})
+        return ret
     def _wrapped_call(self, attr, args):
-        ret = getattr(self.wrapped, attr)(*args)
+        self.__get_call('pre_call_%s' % attr)
+        args, kwargs = self._deadj_args(attr, args)
+        ret = getattr(self.wrapped, attr)(*args, **kwargs)
         ret = self._adj_return(attr, ret)
         data = return2data(ret)
         self.sock.send(data)
