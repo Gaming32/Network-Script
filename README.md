@@ -1,6 +1,6 @@
 # Installing
 To install use the command `python -m pip install Network-Script`.
-# Tutorial
+# Basic Tutorial
 ## Server
 To start off import the `Server` class:
 ``` python
