@@ -1,3 +1,4 @@
+import socket
 from .netsc import NetworkScript
 
 class Client(NetworkScript):

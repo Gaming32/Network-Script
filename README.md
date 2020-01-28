@@ -17,11 +17,11 @@ server = MyServer(wrapped_obj)
 server.accept()
 ```
 ## Client
-To start off import the `Server` class:
+To start off import the `Client` class:
 ``` python
 from netsc import Client
 ```
-Then create a subclass of the `Server` class, possibly defining `sock_family`, `sock_type`, and `sock_proto`:
+Then create a subclass of the `Client` class, possibly defining `sock_family`, `sock_type`, and `sock_proto`:
 ``` python
 class MyClient(Client):
     pass
@@ -31,3 +31,5 @@ Then create an instance, define the object it wraps, and connect to a server:
 client = MyClient(wrapped_obj)
 client.connect(('localhost', 1920))
 ```
+## From then
+From now on one end can call the `poll` method, and the other end can then call any method and get any attribute of the wrapped class. Note concerning attributes: to get an attribute the attribute must be listed in the `attrs` attribute of the end initiating the attribute get.
