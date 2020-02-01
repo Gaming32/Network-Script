@@ -37,6 +37,11 @@ Must define:
         if ret is None:
             ret = args
         return ret
+    def _deadj_return(self, name, preret):
+        ret = self.__get_call('deadj_return_%s' % name, (preret,))
+        if ret is None:
+            ret = preret
+        return ret
     def _message(self, name, args=(), kwargs={}):
         self.__get_call('pre_func_%s' % name)
         args = self._adj_args(name, args, kwargs)
@@ -46,8 +51,10 @@ Must define:
             if res['return']: break
             else:
                 self._wrapped_call(res['name'], res['args'])
+        ret = res['args']
+        ret = self._deadj_return(name, ret)
         self.__get_call('post_func_%s' % name)
-        return res['args']
+        return ret
     def __getattr__(self, attr):
         if attr in self.attrs:
             do_getattr = self.__get_call('pre_getattr_%s' % attr)
