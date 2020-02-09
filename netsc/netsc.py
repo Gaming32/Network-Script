@@ -12,7 +12,7 @@ Must define:
         raise NotImplementedError('Abstract class')
     def __get_call(self, funcname, args=(), kwargs={}):
         if funcname in dir(self):
-            getattr(self, funcname)(*args, **kwargs)
+            return getattr(self, funcname)(*args, **kwargs)
     def _adj_return(self, name, preret):
         ret = self.__get_call('adj_return_%s' % name, (preret,))
         if ret is None:
@@ -77,4 +77,7 @@ Must define:
             else: break
         return self._wrapped_call(res['name'], res['args'])
 
-__all__ = ['NetworkScript']
+class nulldata:
+    "Return this for `null` to get sent over network"
+
+__all__ = ['NetworkScript', 'nulldata']
