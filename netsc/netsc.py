@@ -13,14 +13,16 @@ Must define:
     def __get_call(self, funcname, args=(), kwargs={}):
         if funcname in dir(self):
             return getattr(self, funcname)(*args, **kwargs)
+        else:
+            return _NON_EXISTANT
     def _adj_return(self, name, preret):
         ret = self.__get_call('adj_return_%s' % name, (preret,))
-        if ret is None:
+        if ret is _NON_EXISTANT:
             ret = preret
         return ret
     def _deadj_args(self, name, args):
         ret = self.__get_call('deadj_args_%s' % name, args)
-        if ret is None:
+        if ret is _NON_EXISTANT:
             ret = (args, {})
         return ret
     def _wrapped_call(self, attr, args):
@@ -34,12 +36,12 @@ Must define:
         return ret
     def _adj_args(self, name, args, kwargs):
         ret = self.__get_call('adj_args_%s' % name, args, kwargs)
-        if ret is None:
+        if ret is _NON_EXISTANT:
             ret = args
         return ret
     def _deadj_return(self, name, preret):
         ret = self.__get_call('deadj_return_%s' % name, (preret,))
-        if ret is None:
+        if ret is _NON_EXISTANT:
             ret = preret
         return ret
     def _message(self, name, args=(), kwargs={}):
@@ -77,7 +79,14 @@ Must define:
             else: break
         return self._wrapped_call(res['name'], res['args'])
 
-class nulldata:
-    "Return this for `null` to get sent over network"
+class _non_existant_class:
+    __slots__ = []
+    "Internal use"
+    def __bool__(self):
+        return False
+    def __repr__(self):
+        return '<_NON_EXISTANT at 0x%x>' % id(self)
+_NON_EXISTANT = _non_existant_class()
+del _non_existant_class
 
-__all__ = ['NetworkScript', 'nulldata']
+__all__ = ['NetworkScript']
