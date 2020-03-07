@@ -105,7 +105,9 @@ class DataToObjects:
         return self.data, self.data_type
 def data2objects(data):
     value, type = DataToObjects(data).tokenize()
-    value.pop(0xff)
+    try: value.pop(0xff)
+    except KeyError:
+        raise ConnectionAbortedError('The connection was aborted')
     if type == CALL_DATA:
         name = value.pop(0x00)
         res = list(value.values())
@@ -114,6 +116,10 @@ def data2objects(data):
         name = None
         res = value.pop(0x00)
         return_ = True
+    elif type == INCOMPLETE_DATA:
+        raise ValueError('Incomplete data detected in: %s' % data)
+    else:
+        raise ValueError('Invalid transfer type: 0x%x (other data: %s)' % (type, value))
     return {'name': name, 'args': res, 'return': return_}
 
 def _object2data(obj):

@@ -2,7 +2,7 @@ import setuptools
 
 setuptools.setup(
     name = 'Network Script',
-    version = '1.0.4',
+    version = '1.0.5',
     url = 'https://github.com/gaming32/Network-Script',
     author = 'Gaming32',
     author_email = 'gaming32i64@gmail.com',
