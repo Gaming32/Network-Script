@@ -1,5 +1,11 @@
 import struct, numbers
 
+from os import environ
+if 'NETSCDEBUG' in environ:
+    _debug_mode = int(environ['NETSCDEBUG'])
+    print('NETSCDEBUG is %sABLED' % ('EN' if _debug_mode else 'DIS'))
+else: _debug_mode = None
+
 NO_STATE        = 0b000000
 IN_CALL         = 0b000001
 IN_RETURN       = 0b000010
@@ -120,6 +126,11 @@ def data2objects(data):
         raise ValueError('Incomplete data detected in: %s' % data)
     else:
         raise ValueError('Invalid transfer type: 0x%x (other data: %s)' % (type, value))
+    if _debug_mode:
+        if return_:
+            print('Deserialized return: %r' % (res,))
+        else:
+            print('Deserialized command: %s: %s' % (name, ', '.join(repr(x) for x in res)))
     return {'name': name, 'args': res, 'return': return_}
 
 def _object2data(obj):
@@ -162,12 +173,16 @@ def objects2data(name, *args):
         data += b'\x01'
         data += _object2data(arg)
     data += b'\xff'
+    if _debug_mode:
+        print('Serialized command: %s: %s' % (name, ', '.join(repr(x) for x in args)))
     return data
 def return2data(return_val):
     data = b''
     data += b'\x02'
     data += _object2data(return_val)
     data += b'\xff'
+    if _debug_mode:
+        print('Deserialized return: %r' % (return_val,))
     return data
 
 if __name__ == '__main__':
